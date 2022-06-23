@@ -1,12 +1,14 @@
 import * as rl from 'readline-sync'
 import { AccountManagement } from '../management/managementAccount/accountManagement';
 import { Account } from '../model/Account';
+import { AdminMenu } from './adminMenu';
 import { UserMenu } from './userMenu';
 
 
 export class LoginMenu {
     private listAccount = new AccountManagement();
     private userMenu = new UserMenu();
+    private adminMenu=new AdminMenu();
     menuAccount() {
         console.log('----Account User----');
         console.log('1. Đăng kí tài khoản ');
@@ -90,39 +92,31 @@ export class LoginMenu {
 
     }
     inputAge() {
-        let isValidAge = true;
-        let age=0;
-        do {
-            let age = +rl.question('Nhập tuổi ');
-            if (age < 18) {
-                isValidAge = false;
-                console.log(" Không đủ tuổi. Vui lòng chờ đến tuổi để tạo tài khoản ");
-            } else {
-                isValidAge = true;
-            }
-        } while (!isValidAge);
+        let age = +rl.question('Nhập tuổi ');
         return age;
     }
-    registerAccount(): Account {
+    registerAccount(): Account | null {
         let username = rl.question("Nhập tên người dùng ");
         let accountName = this.inputAccountName();
         let password = this.inputPassword();
         let email = this.inputEmail();
         let phoneNumber = this.inputPhoneNumber();
         let age = this.inputAge();
-
+        if (age < 18) {
+            console.log("Không đủ tuổi. Vui lòng chờ đến tuổi để tạo tài khoản ");
+            return null;
+        }
         return new Account(username, accountName, password, email, phoneNumber, age);
     }
     logInAccount() {
         let accountName = rl.question('Nhập tài khoản:');
         let password = rl.question('Nhập mật khẩu:');
-        let choice = '-1';
         let current = this.listAccount.login(accountName, password);
         if (current) {
             console.log('Đăng nhập thành công!');
             //Check role => admin thì mở menu admin, user mở menu user
             if (current.role == 0) {
-                //mở menu admin
+                this.adminMenu.run();
 
             } else {
                 this.userMenu.start();
@@ -142,9 +136,14 @@ export class LoginMenu {
                 case '1':
                     console.log("-- Đăng kí tài khoản --");
                     let newAccount = this.registerAccount();
-                    this.listAccount.createNew(newAccount);
-                    console.log("-- Đăng kí thành công --");
-                    break;
+                    if (newAccount == null) {
+                        console.log('Đăng kí không thành công ');
+                        break;
+                    } else {
+                        this.listAccount.createNew(newAccount);
+                        console.log("-- Đăng kí thành công --");
+                        break;
+                    }
                 case '2':
                     console.log("-- Đăng nhập --");
                     this.logInAccount();
@@ -152,6 +151,5 @@ export class LoginMenu {
             }
         } while (choice !== '0');
     }
-
 
 }

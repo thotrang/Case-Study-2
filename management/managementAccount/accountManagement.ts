@@ -54,6 +54,8 @@ export class AccountManagement implements IAccountManagement {
         let index = this.checkIndexByName(name);
         if (index >= 0) {
             AccountManagement.listAccount.splice(index, 1);
+        } else {
+            console.log('không có thông tin tài khoản ');
         }
     }
 

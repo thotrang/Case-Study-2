@@ -13,14 +13,14 @@ export class UserMenu {
     set sum(money) {
         this._money = money;
     }
-    choice() {
+    choiceMenu() {
         console.log('---Game Center---')
         console.log('1. kiểm tra thời gian sử dụng ')
         console.log('2. Gọi đồ')
         console.log('3. Thanh toán (10000 đồng/1 hour')
         console.log('0. Đăng xuất')
     }
-    choiceOder() {
+    choiceOderMenu() {
         console.log('--Oder thêm đồ đi ae--');
         console.log('1. Bánh mì trứng (20000 đồng)');
         console.log('2. Phở bò (30000 đồng)');
@@ -44,7 +44,7 @@ export class UserMenu {
     orderFoot() {
         let choice = '-1';
         do {
-            this.choiceOder();
+            this.choiceOderMenu();
             choice = rl.question(" chọn đồ đi ae ");
             switch (choice) {
                 case '1':
@@ -81,7 +81,7 @@ export class UserMenu {
     run() {
         let choice = '-1';
         do {
-            this.choice();
+            this.choiceMenu();
             choice = rl.question("Nhập lựa chọn đi gamer ");
             switch(choice){
                 case '1':
@@ -92,6 +92,9 @@ export class UserMenu {
                     this.orderFoot();
                     break;
                 case '3':
+                    for(let i=0;i<this.oder.length;i++){
+                        console.log(this.oder[i]+'\n');   
+                    }
                     console.log(this.pay());
                     break;
             }

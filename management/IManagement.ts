@@ -7,4 +7,5 @@ export interface IManagement<T>{
 
     removeByName(name:string): void;
 
+    checkIndexByName(name: string): number;
 }
