@@ -1,11 +1,12 @@
 import * as rl from 'readline-sync'
 import { AccountManagement } from '../management/managementAccount/accountManagement';
 import { Account } from '../model/Account';
+import { UserMenu } from './userMenu';
 
 
 export class LoginMenu {
     private listAccount = new AccountManagement();
-
+    private userMenu = new UserMenu();
     menuAccount() {
         console.log('----Account User----');
         console.log('1. Đăng kí tài khoản ');
@@ -90,8 +91,9 @@ export class LoginMenu {
     }
     inputAge() {
         let isValidAge = true;
+        let age=0;
         do {
-            let age = +rl.question(' Nhập tuổi ');
+            let age = +rl.question('Nhập tuổi ');
             if (age < 18) {
                 isValidAge = false;
                 console.log(" Không đủ tuổi. Vui lòng chờ đến tuổi để tạo tài khoản ");
@@ -99,6 +101,7 @@ export class LoginMenu {
                 isValidAge = true;
             }
         } while (!isValidAge);
+        return age;
     }
     registerAccount(): Account {
         let username = rl.question("Nhập tên người dùng ");
@@ -106,14 +109,14 @@ export class LoginMenu {
         let password = this.inputPassword();
         let email = this.inputEmail();
         let phoneNumber = this.inputPhoneNumber();
-        let age = +rl.question(' Nhập tuổi ');
+        let age = this.inputAge();
 
         return new Account(username, accountName, password, email, phoneNumber, age);
     }
     logInAccount() {
         let accountName = rl.question('Nhập tài khoản:');
         let password = rl.question('Nhập mật khẩu:');
-        let choice='-1';
+        let choice = '-1';
         let current = this.listAccount.login(accountName, password);
         if (current) {
             console.log('Đăng nhập thành công!');
@@ -122,16 +125,8 @@ export class LoginMenu {
                 //mở menu admin
 
             } else {
-                do {
-                    //mở menu user
-                    console.log('---Game Center---')
-                    console.log('1. kiểm tra thời gian sử dụng ')
-                    console.log('2. Gọi đồ')
-                    console.log('3. Thanh toán')
-                    console.log('0. Đăng xuất')
-
-                    choice=rl.question("Nhập lựa chọn đi gamer ");
-                } while (choice!='0');
+                this.userMenu.start();
+                this.userMenu.run();
 
             }
         } else {

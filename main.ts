@@ -8,4 +8,4 @@ let ADMIN=new Account('ADMIN','admin','admin2312@','0123456','admin@gmail.com',2
 ADMIN.role=0;
 listAccount.createNew(ADMIN);
 loginAccount.run();
-console.log(listAccount.getAll());
+
