@@ -6,9 +6,11 @@ import { IMachineManagement } from "./IMachineManagement";
 export class MachineManagement implements IMachineManagement {
 
     private static listMachine: Machine[] = [];
-    Machines():Machine[]{
-        for(let i=1;i<=20;i++){
-            let machine=new Machine(`machine ${i}`,0);
+    private static id: number;
+    Machines(): Machine[] {
+        for (let i = 1; i <= 20; i++) {
+            let machine = new Machine(`machine ${i}`);
+            machine.status = 0;
             MachineManagement.listMachine.push(machine);
         }
         return MachineManagement.listMachine;
@@ -26,7 +28,7 @@ export class MachineManagement implements IMachineManagement {
         }
         return index;
     }
-    findByName(name: string): Machine | null{
+    findByName(name: string): Machine | null {
         let index = this.checkIndexByName(name);
         if (index >= 0) {
             return MachineManagement.listMachine[index];
@@ -36,6 +38,8 @@ export class MachineManagement implements IMachineManagement {
     }
 
     createNew(t: Machine): void {
+        MachineManagement.id++;
+        t.id = MachineManagement.id;
         MachineManagement.listMachine.push(t);
     }
     updateByName(name: string, t: Machine): void {

@@ -1,9 +1,11 @@
 import * as rl from 'readline-sync'
+import { Machine } from '../model/Machine';
 export class UserMenu {
     private _startTime: number = 0;
     private _endTime: number = 0;
     private _money: number = 0;
     private oder: string[] = [];
+    private MachineUse:Machine | undefined;
     constructor() {
         this._startTime = new Date().getMinutes();
     }
@@ -17,7 +19,7 @@ export class UserMenu {
         console.log('---Game Center---')
         console.log('1. kiểm tra thời gian sử dụng ')
         console.log('2. Gọi đồ')
-        console.log('3. Thanh toán (10000 đồng/1 hour')
+        console.log('3. Thành tiền')
         console.log('0. Đăng xuất')
     }
     choiceOderMenu() {
@@ -82,7 +84,7 @@ export class UserMenu {
         let choice = '-1';
         do {
             this.choiceMenu();
-            choice = rl.question("Nhập lựa chọn đi gamer ");
+            choice = rl.question("Nhập lựa chọn đi gammer ");
             switch(choice){
                 case '1':
                     this.end();
@@ -100,5 +102,6 @@ export class UserMenu {
             }
 
         }while(choice!='0');  
+        
     }
 }

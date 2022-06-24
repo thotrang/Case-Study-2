@@ -1,17 +1,25 @@
-export enum Status{
+import { Account } from "./Account";
+
+export enum Status {
     Disable = 0,
     Available = 1
 }
-export class Machine{
-    private _name:string;
-    private _status:Status=Status.Disable;
+export class Machine {
+    private _name: string;
+    private _id: number;
+    private _status: Status = Status.Disable;
+    private _accountLogin: Account|null=null;
 
-
-    constructor(name: string, status: Status) {
+    constructor(name: string) {
         this._name = name;
-        this._status = status;
+        this._id = 1;
     }
-
+    get id(): number {
+        return this._id;
+    }
+    set id(value: number) {
+        this._id = value;
+    }
     get name(): string {
         return this._name;
     }
@@ -27,7 +35,12 @@ export class Machine{
     set status(value: Status) {
         this._status = value;
     }
-    toSing(){
 
+    get accountLogin(): Account | null {
+        return this._accountLogin;
+    }
+
+    set accountLogin(value: Account | null) {
+        this._accountLogin = value;
     }
 }

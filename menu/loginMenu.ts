@@ -1,5 +1,6 @@
 import * as rl from 'readline-sync'
 import { AccountManagement } from '../management/managementAccount/accountManagement';
+import { MachineManagement } from '../management/managementMachine/MachineManagement';
 import { Account } from '../model/Account';
 import { AdminMenu } from './adminMenu';
 import { UserMenu } from './userMenu';
@@ -7,8 +8,9 @@ import { UserMenu } from './userMenu';
 
 export class LoginMenu {
     private listAccount = new AccountManagement();
+    private listMachine = new MachineManagement();
     private userMenu = new UserMenu();
-    private adminMenu=new AdminMenu();
+    private adminMenu = new AdminMenu();
     menuAccount() {
         console.log('----Account User----');
         console.log('1. Đăng kí tài khoản ');
@@ -109,12 +111,18 @@ export class LoginMenu {
         return new Account(username, accountName, password, email, phoneNumber, age);
     }
     logInAccount() {
+        let nameMachine = rl.question('chọn máy tính sử dụng ');
+        let useMachine = this.listMachine.findByName(nameMachine);
+
         let accountName = rl.question('Nhập tài khoản:');
         let password = rl.question('Nhập mật khẩu:');
         let current = this.listAccount.login(accountName, password);
         if (current) {
             console.log('Đăng nhập thành công!');
-            //Check role => admin thì mở menu admin, user mở menu user
+            if (useMachine) {
+                useMachine.accountLogin = current;
+                useMachine.status = 1
+            }
             if (current.role == 0) {
                 this.adminMenu.run();
 
