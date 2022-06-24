@@ -1,13 +1,9 @@
 import * as rl from 'readline-sync'
 import { Machine } from '../model/Machine';
 export class UserMenu {
-    private _startTime: number = 0;
-    private _endTime: number = 0;
     private _money: number = 0;
     private oder: string[] = [];
-    private MachineUse:Machine | undefined;
     constructor() {
-        this._startTime = new Date().getMinutes();
     }
     get sum() {
         return this._money;
@@ -32,15 +28,6 @@ export class UserMenu {
         console.log('6. Sting nguyên chất (20000k)');
         console.log('0. Thoát ');
 
-    }
-    start() {
-        this._startTime = new Date().getMinutes();
-    }
-    end() {
-        this._endTime = new Date().getMinutes();
-    }
-    getTime() {
-        return this._endTime - this._startTime;
     }
 
     orderFoot() {
@@ -76,19 +63,21 @@ export class UserMenu {
             }
         } while (choice != '0');
     }
-    pay() {
-        let sum = this.sum + this.getTime()*166.66;
+    pay(useMachine:Machine) :number{
+        useMachine.end();
+        let sum = this.sum + useMachine.getTime()*166.66;
+        useMachine.payMoney=sum;
         return sum;
     }
-    run() {
+    run(useMachine:Machine) {
         let choice = '-1';
         do {
             this.choiceMenu();
             choice = rl.question("Nhập lựa chọn đi gammer ");
             switch(choice){
                 case '1':
-                    this.end();
-                    console.log(this.getTime());
+                    useMachine.end();
+                    console.log(useMachine.getTime());
                     break;
                 case '2':
                     this.orderFoot();
@@ -97,7 +86,7 @@ export class UserMenu {
                     for(let i=0;i<this.oder.length;i++){
                         console.log(this.oder[i]+'\n');   
                     }
-                    console.log(this.pay());
+                    console.log(this.pay(useMachine));
                     break;
             }
 

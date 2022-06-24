@@ -6,12 +6,14 @@ import { IMachineManagement } from "./IMachineManagement";
 export class MachineManagement implements IMachineManagement {
 
     private static listMachine: Machine[] = [];
-    private static id: number;
+    private static id: number=1;
     Machines(): Machine[] {
         for (let i = 1; i <= 20; i++) {
             let machine = new Machine(`machine ${i}`);
             machine.status = 0;
+            machine.id=MachineManagement.id;
             MachineManagement.listMachine.push(machine);
+            MachineManagement.id++;
         }
         return MachineManagement.listMachine;
     }

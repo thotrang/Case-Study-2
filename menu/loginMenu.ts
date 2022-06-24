@@ -122,15 +122,16 @@ export class LoginMenu {
             if (useMachine) {
                 useMachine.accountLogin = current;
                 useMachine.status = 1
-            }
-            if (current.role == 0) {
-                this.adminMenu.run();
+                if (current.role == 0) {
+                    this.adminMenu.run();
+                } else {
+                    useMachine.start();
+                    this.userMenu.run(useMachine);
+                    useMachine.end();
 
-            } else {
-                this.userMenu.start();
-                this.userMenu.run();
-
+                }
             }
+
         } else {
             console.log('Tài khoản hoặc mật khẩu không đúng!');
         }

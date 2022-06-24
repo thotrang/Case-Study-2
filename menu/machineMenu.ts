@@ -5,8 +5,9 @@ import { UserMenu } from './userMenu';
 import { IMachineManagement } from '../management/managementMachine/IMachineManagement';
 
 export class MachineMenu {
-    private listMachine :IMachineManagement= new MachineManagement();
-
+    private listMachine: IMachineManagement = new MachineManagement();
+    private accountUse = new UserMenu();
+    static sum =0;
     menuViewMachine() {
         console.log("-- Quản lí máy tính --");
         console.log('1. Thêm máy tính ');
@@ -15,7 +16,7 @@ export class MachineMenu {
         console.log('4. Xem thông tin tất cả máy tính ');
         console.log('0. Thoát');
     }
-    menuEditMachine(){
+    menuEditMachine() {
         console.log('1. Bật tắt máy ');
         console.log('2. Sửa thông tin máy tính');
         console.log('3. Tính tiền ');
@@ -23,17 +24,17 @@ export class MachineMenu {
     }
     createNewMachine() {
         let name = '';
-        let isValidNameMachine=true;
-        do{
-            name=rl.question('Nhập tên máy ');
-            let current=this.listMachine.findByName(name);
-            if(current){
-                isValidNameMachine=false;
+        let isValidNameMachine = true;
+        do {
+            name = rl.question('Nhập tên máy ');
+            let current = this.listMachine.findByName(name);
+            if (current) {
+                isValidNameMachine = false;
                 console.log('Tên máy đã tồn tại ');
-            }else{
-                isValidNameMachine=true;
+            } else {
+                isValidNameMachine = true;
             }
-        }while(!isValidNameMachine);
+        } while (!isValidNameMachine);
         return new Machine(name);
     }
     removeMachine() {
@@ -48,7 +49,7 @@ export class MachineMenu {
         }
     }
 
-    updateMachine(name:string) {
+    updateMachine(name: string) {
         let newId = +rl.question('Nhập id mới ');
 
         let newUpdate = this.createNewMachine()
@@ -56,7 +57,7 @@ export class MachineMenu {
         this.listMachine.updateByName(name, newUpdate);
     }
 
-    OpenMachine(machine:Machine) {
+    OpenMachine(machine: Machine) {
         if (machine.status == 0) {
             machine.status = 1;
 
@@ -66,34 +67,40 @@ export class MachineMenu {
             }
         }
     }
-    editMachine(){
-            let name = rl.question('Nhập tên máy ');
-            let machine = this.listMachine.findByName(name);
-            if (machine == null) {
-                console.log("Máy tính không tồn tại ");
+    editMachine() {
+        let name = rl.question('Nhập tên máy ');
+        let machine = this.listMachine.findByName(name);
+        if (machine == null) {
+            console.log("Máy tính không tồn tại ");
+        } else {
+            console.log(`name: ${machine.name} , id: ${machine.id} , status: ${machine.status == 0 ? 'Tắt' : 'Bật'} , tài khoản sử dụng: ${machine.accountLogin?.accountName}`);
+            if (machine.accountLogin?.role == 1) {
+                let choice = '-1';
+                do {
+                    this.menuEditMachine();
+                    choice = rl.question('Nhập lựa chọn ');
+                    switch (choice) {
+                        case '1':
+                            this.OpenMachine(machine);
+                            break;
+                        case '2':
+                            this.updateMachine(name);
+                            break;
+                        case '3':
+                            MachineMenu.sum+=machine.payMoney;
+                            console.log(machine.payMoney);
+                            machine.payMoney=0;
+                            machine.accountLogin=null;
+                            machine.status=0;
+                            break;
+
+                    }
+                } while (choice != '0');
+
             } else {
-                console.log(`name: ${machine.name} , id: ${machine.id} , status: ${machine.status == 0 ? 'Tắt' : 'Bật'}`);
-                console.log(` Thời gian sử dung ${}`);
-                if (machine.status == 1) {
-                    let choice='-1';
-                    do{
-                        choice=rl.question('Nhập lựa chọn ');
-                        switch(choice){
-                            case '1':
-                                this.OpenMachine(machine);
-                                break;
-                            case '2':
-                                this.updateMachine(name);
-                                break;
-                            case '3':
-
-                        }
-                    }while(choice!='0');
-
-                }else{
-                    console.log('Admin');  
-                }
+                console.log('Admin');
             }
+        }
     }
     run() {
         let choice = '-1';
@@ -103,14 +110,14 @@ export class MachineMenu {
 
             switch (choice) {
                 case '1':
-                    let machine=this.createNewMachine();
+                    let machine = this.createNewMachine();
                     this.listMachine.createNew(machine);
                     break;
                 case '2':
                     this.removeMachine();
                     break;
 
-                case '3':{
+                case '3': {
                     this.editMachine();
                     break;
                 }

@@ -9,10 +9,30 @@ export class Machine {
     private _id: number;
     private _status: Status = Status.Disable;
     private _accountLogin: Account|null=null;
+    private _startTime: number = 0;
+    private _endTime: number = 0;
+    private _money:number;
 
     constructor(name: string) {
+        this._startTime = new Date().getMinutes();
         this._name = name;
         this._id = 1;
+        this._money=0;
+    }
+    start() {
+        this._startTime = new Date().getMinutes();
+    }
+    end() {
+        this._endTime = new Date().getMinutes();
+    }
+    getTime() {
+        return this._endTime - this._startTime;
+    }
+    get payMoney(){
+        return this._money;
+    }
+    set payMoney(value:number){
+        this._money=value;
     }
     get id(): number {
         return this._id;

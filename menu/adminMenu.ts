@@ -1,11 +1,9 @@
 import * as rl from 'readline-sync'
 import { AccountManagement } from '../management/managementAccount/accountManagement';
-import { MachineManagement } from '../management/managementMachine/MachineManagement';
-import { Machine } from '../model/Machine';
+import { MachineMenu } from './machineMenu';
 export class AdminMenu {
     private listAccount = new AccountManagement();
-    private listMachine = new MachineManagement();
-
+    private machineMenu=new MachineMenu();
     menuViewAccount() {
         console.log('-- Quản lí tài khoản người chơi --');
         console.log('1. Xem thông tin tất cả tài khoản ');
@@ -43,7 +41,7 @@ export class AdminMenu {
     }
 
     viewMachine() {
-       
+       this.machineMenu.run()
     }
     run() {
         let choice = '-1';
@@ -64,7 +62,8 @@ export class AdminMenu {
                     this.viewMachine();
                     break;
                 case '3':
-
+                    console.log(MachineMenu.sum);
+                    break;
             }
 
         } while (choice != '0')
