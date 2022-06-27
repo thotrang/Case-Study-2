@@ -18,11 +18,23 @@ export class ReadFile {
         fs.writeFileSync("database/readFile.json", data1);
     }
 
-    readToFile(): any {
+    readToFile(): Account[] {
         let data = fs.readFileSync('database/readFile.json', { encoding: 'utf8', flag: 'r' });
         let arrData: any[] = JSON.parse(data);
         let accounts:Account[]=[];
-        for(let i=0)
+        for(let i=0;i<arrData.length;i++){
+            let id=arrData[i]._id;
+            let name=arrData[i]._username;
+            let password=arrData[i]._password;
+            let phoneNumber=arrData[i]._phoneNumber;
+            let email=arrData[i]._email;
+            let age=arrData[i]._age;
+            let accountName=arrData[i]._accountName;
+            let account=new Account(name,accountName,password,phoneNumber,email,age);
+            account.id=id;
+            
+            accounts.push(account);
+        }
         return accounts
     }
 

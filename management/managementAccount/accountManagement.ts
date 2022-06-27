@@ -3,15 +3,16 @@ import { Account } from "../../model/Account";
 import { IAccountManagement } from "./IAccountManagement";
 
 export class AccountManagement implements IAccountManagement {
-    private static listAccount: any[] = [];
-    private static id: number = 1;
+    private static listAccount: Account[] = [];
     private read=new ReadFile()
     constructor(){
         AccountManagement.listAccount=this.read.readToFile();
+        // console.log(AccountManagement.listAccount);
+        
     }
     createNew(t: Account): void {
         let accounts=this.read.readToFile()
-        t.id = accounts[accounts.length-1]._id+1;
+        t.id = accounts[accounts.length-1].id+1;
         AccountManagement.listAccount.push(t);     
     }
 
@@ -29,6 +30,7 @@ export class AccountManagement implements IAccountManagement {
         return index;
     }
     findByAccountName(name: string): Account | null {
+        
         let index = this.checkIndexByName(name);
         if (index >= 0) {
             return AccountManagement.listAccount[index];
@@ -74,7 +76,7 @@ export class AccountManagement implements IAccountManagement {
 
     login(accountName:string, password:string):Account|null {      
         for (let account of AccountManagement.listAccount) {
-            if (accountName == account._accountName && password == account._password) {
+            if (accountName == account.accountName && password == account.password) {
                 return account;
             }
         }
