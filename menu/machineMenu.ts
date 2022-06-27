@@ -6,14 +6,14 @@ import { IMachineManagement } from '../management/managementMachine/IMachineMana
 
 export class MachineMenu {
     private listMachine: IMachineManagement = new MachineManagement();
-    private accountUse = new UserMenu();
-    static sum =0;
+    static sum = 0;
     menuViewMachine() {
         console.log("-- Quản lí máy tính --");
         console.log('1. Thêm máy tính ');
         console.log('2. Xóa máy tính ');
         console.log('3. Tìm kiếm máy tính');
         console.log('4. Xem thông tin tất cả máy tính ');
+        console.log('5. Kiểm tra máy tính sử dụng ');
         console.log('0. Thoát');
     }
     menuEditMachine() {
@@ -74,7 +74,7 @@ export class MachineMenu {
             console.log("Máy tính không tồn tại ");
         } else {
             console.log(`name: ${machine.name} , id: ${machine.id} , status: ${machine.status == 0 ? 'Tắt' : 'Bật'} , tài khoản sử dụng: ${machine.accountLogin?.accountName}`);
-            if (machine.accountLogin?.role == 1) {
+            if (machine.accountLogin?.role !=0) {
                 let choice = '-1';
                 do {
                     this.menuEditMachine();
@@ -87,11 +87,11 @@ export class MachineMenu {
                             this.updateMachine(name);
                             break;
                         case '3':
-                            MachineMenu.sum+=machine.payMoney;
+                            MachineMenu.sum += machine.payMoney;
                             console.log(machine.payMoney);
-                            machine.payMoney=0;
-                            machine.accountLogin=null;
-                            machine.status=0;
+                            machine.payMoney = 0;
+                            machine.accountLogin = null;
+                            machine.status = 0;
                             break;
 
                     }
@@ -101,6 +101,22 @@ export class MachineMenu {
                 console.log('Admin');
             }
         }
+    }
+    checkMachine() {
+        let machinesDisable: Machine[] = [];
+        let machinesAvailable: Machine[] = [];
+
+        let machines = this.listMachine.getAll();
+        for (let i = 0; i < machines.length; i++) {
+            if (machines[i].status == 0) {
+                machinesDisable.push(machines[i]);
+            } else {
+                machinesAvailable.push(machines[i]);
+            }
+        }
+        console.log(` Các máy đang hoạt động ${machinesAvailable}`);
+        console.log(` Các máy chống ${machinesDisable}`);
+
     }
     run() {
         let choice = '-1';
@@ -124,7 +140,9 @@ export class MachineMenu {
                 case '4':
                     this.showAllMachine();
                     break;
-
+                case '5':
+                    this.checkMachine();
+                    break;
             }
 
         } while (choice != '0');

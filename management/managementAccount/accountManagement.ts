@@ -1,14 +1,18 @@
+import { ReadFile } from "../../menu/readFileMenu";
 import { Account } from "../../model/Account";
 import { IAccountManagement } from "./IAccountManagement";
 
 export class AccountManagement implements IAccountManagement {
-    private static listAccount: Account[] = [];
+    private static listAccount: any[] = [];
     private static id: number = 1;
+    private read=new ReadFile()
+    constructor(){
+        AccountManagement.listAccount=this.read.readToFile();
+    }
     createNew(t: Account): void {
-        AccountManagement.id++;
-        t.id = AccountManagement.id;
-        AccountManagement.listAccount.push(t);
-
+        let accounts=this.read.readToFile()
+        t.id = accounts[accounts.length-1]._id+1;
+        AccountManagement.listAccount.push(t);     
     }
 
     getAll(): Account[] {
@@ -68,9 +72,9 @@ export class AccountManagement implements IAccountManagement {
         }
     }
 
-    login(accountName:string, password:string):Account|null {
+    login(accountName:string, password:string):Account|null {      
         for (let account of AccountManagement.listAccount) {
-            if (accountName == account.accountName && password == account.password) {
+            if (accountName == account._accountName && password == account._password) {
                 return account;
             }
         }

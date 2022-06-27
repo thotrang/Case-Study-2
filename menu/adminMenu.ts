@@ -11,7 +11,6 @@ export class AdminMenu {
         console.log('3. Chuyển đổi tài khoản thành admin ');
         console.log('0. Thoát');
     }
-
     viewAccount() {
         let choice = '-1';
         do {
@@ -49,7 +48,7 @@ export class AdminMenu {
             console.log('Lựa chọn quản lí ');
             console.log('1. Quản lí tài khoản người dùng');
             console.log('2. Quản lí máy tính ');
-            console.log('3. Tổng doanh thu ');
+            console.log('3. doanh thu ');
             console.log('0. Đăng xuất ');
 
 
@@ -62,7 +61,18 @@ export class AdminMenu {
                     this.viewMachine();
                     break;
                 case '3':
-                    console.log(MachineMenu.sum);
+                    {
+                        let choice='-1';
+                        do{
+                            console.log('1. doanh thu 1 tháng');
+                            console.log('2. doanh thu 1 năm ');
+                            console.log('3. doanh thu hôm nay');
+                            console.log('0. Thoát ');
+                            
+                            choice=rl.question('lựa chọn của bạn')   
+
+                        }while(choice!='0');
+                    }
                     break;
             }
 

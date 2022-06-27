@@ -2,20 +2,28 @@ import * as rl from 'readline-sync'
 import { Machine } from '../model/Machine';
 export class UserMenu {
     private _money: number = 0;
+    private _sumPay:number=0;
     private oder: string[] = [];
     constructor() {
     }
-    get sum() {
+    get money() {
         return this._money;
     }
-    set sum(money) {
-        this._money = money;
+    set money(value:number) {
+        this._money = value;
+    }
+    get sumPay() {
+        return this._sumPay;
+    }
+    set sumPay(value:number) {
+        this._sumPay = value;
     }
     choiceMenu() {
         console.log('---Game Center---')
         console.log('1. kiểm tra thời gian sử dụng ')
         console.log('2. Gọi đồ')
         console.log('3. Thành tiền')
+        console.log('4. Nạp tiền ');
         console.log('0. Đăng xuất')
     }
     choiceOderMenu() {
@@ -30,6 +38,9 @@ export class UserMenu {
 
     }
 
+    checkMachine(){
+
+    }
     orderFoot() {
         let choice = '-1';
         do {
@@ -37,27 +48,27 @@ export class UserMenu {
             choice = rl.question(" chọn đồ đi ae ");
             switch (choice) {
                 case '1':
-                    this.sum += 20000;
+                    this.sumPay += 20000;
                     this.oder.push('1 bánh mì trứng')
                     break;
                 case '2':
-                    this.sum += 30000;
+                    this.sumPay += 30000;
                     this.oder.push('1 Phở bò')
                     break;
                 case '3':
-                    this.sum += 50000;
+                    this.sumPay += 50000;
                     this.oder.push('1 Mì tôm trứng lòng đào')
                     break;
                 case '4':
-                    this.sum += 100000;
+                    this.sumPay += 100000;
                     this.oder.push('1 Mực hấp xúc xích')
                     break;
                 case '5':
-                    this.sum += 15000;
+                    this.sumPay += 15000;
                     this.oder.push('1 Coca Cola')
                     break;
                 case '6':
-                    this.sum += 20000;
+                    this.sumPay += 20000;
                     this.oder.push('1 Sting nguyên chất')
                     break;
             }
@@ -65,9 +76,10 @@ export class UserMenu {
     }
     pay(useMachine:Machine) :number{
         useMachine.end();
-        let sum = this.sum + useMachine.getTime()*166.66;
-        useMachine.payMoney=sum;
-        return sum;
+        let sumPay = this.sumPay + useMachine.getTime()*166.66;
+        this.money-=sumPay;
+        useMachine.payMoney=sumPay;
+        return sumPay;
     }
     run(useMachine:Machine) {
         let choice = '-1';
@@ -88,6 +100,11 @@ export class UserMenu {
                     }
                     console.log(this.pay(useMachine));
                     break;
+                case '4':{
+                    let moreMoney=+rl.question('Số tiền nạp vào ');
+                    this.money+=moreMoney;
+                    console.log(`Tổng tiền ${this.money}`);    
+                }
             }
 
         }while(choice!='0');  

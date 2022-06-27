@@ -3,15 +3,18 @@ import { AccountManagement } from '../management/managementAccount/accountManage
 import { MachineManagement } from '../management/managementMachine/MachineManagement';
 import { Account } from '../model/Account';
 import { AdminMenu } from './adminMenu';
+import { ReadFile } from './readFileMenu';
 import { UserMenu } from './userMenu';
-
+const fs = require("fs");
 
 export class LoginMenu {
     private listAccount = new AccountManagement();
     private listMachine = new MachineManagement();
     private userMenu = new UserMenu();
     private adminMenu = new AdminMenu();
-    menuAccount() {
+    private readFile = new ReadFile();
+
+    menuAccount() :void{
         console.log('----Account User----');
         console.log('1. Đăng kí tài khoản ');
         console.log('2. Đăng nhập tài khoản ');
@@ -83,7 +86,7 @@ export class LoginMenu {
             let current = this.listAccount.findByAccountName(phoneNumber);
             if (current) {
                 isValidPhoneNumber = false;
-                console.log('Tên tài khoản đã tồn tại');
+                console.log('Số điện thoại đã được đăng kí');
             } else {
                 isValidPhoneNumber = true;
             }
@@ -93,10 +96,11 @@ export class LoginMenu {
 
 
     }
-    inputAge() {
+    inputAge() :number{
         let age = +rl.question('Nhập tuổi ');
         return age;
     }
+
     registerAccount(): Account | null {
         let username = rl.question("Nhập tên người dùng ");
         let accountName = this.inputAccountName();
@@ -107,21 +111,40 @@ export class LoginMenu {
         if (age < 18) {
             console.log("Không đủ tuổi. Vui lòng chờ đến tuổi để tạo tài khoản ");
             return null;
-        }
-        return new Account(username, accountName, password, email, phoneNumber, age);
+        } 
+        let account = new Account(username, accountName, password, phoneNumber, email, age);  
+        return account;
     }
-    logInAccount() {
-        let nameMachine = rl.question('chọn máy tính sử dụng ');
+    inputNameMachine() :string{
+        let nameMachine = '';
+        let isValidMachine = true;
+        do {
+            nameMachine = rl.question('chọn máy tính sử dụng ');
+            let current = this.listMachine.findByName(nameMachine);
+            if (!current) {
+                console.log("Tên máy không tồn tại ");
+                isValidMachine = false;
+            } else {
+                isValidMachine = true;
+            }
+
+        } while (!isValidMachine);
+        return nameMachine;
+    }
+    logInAccount() :void{
+
+        let nameMachine = this.inputNameMachine();
         let useMachine = this.listMachine.findByName(nameMachine);
 
         let accountName = rl.question('Nhập tài khoản:');
         let password = rl.question('Nhập mật khẩu:');
         let current = this.listAccount.login(accountName, password);
+        
         if (current) {
             console.log('Đăng nhập thành công!');
             if (useMachine) {
                 useMachine.accountLogin = current;
-                useMachine.status = 1
+                useMachine.status = 1;
                 if (current.role == 0) {
                     this.adminMenu.run();
                 } else {
@@ -136,8 +159,10 @@ export class LoginMenu {
             console.log('Tài khoản hoặc mật khẩu không đúng!');
         }
     }
-    run() {
+    run() :void{
+        // this.readFile.readToFile();
         let choice = '-1';
+
         do {
             this.menuAccount();
             choice = rl.question('Nhập lựa chọn của bạn ');
@@ -149,7 +174,10 @@ export class LoginMenu {
                         console.log('Đăng kí không thành công ');
                         break;
                     } else {
+                        this.readFile.writeToFile(newAccount);
                         this.listAccount.createNew(newAccount);
+                        // console.log(this.listAccount.getAll());
+                        
                         console.log("-- Đăng kí thành công --");
                         break;
                     }
